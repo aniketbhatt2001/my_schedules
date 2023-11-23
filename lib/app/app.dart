@@ -14,8 +14,5 @@ import '../views/edit_schedule_view.dart';
 ], dependencies: [
   Singleton(classType: NavigationService),
   Singleton(classType: SnackbarService),
-  Singleton(
-    classType: ScheduleViewModel,
-  ),
 ])
 class App {}
