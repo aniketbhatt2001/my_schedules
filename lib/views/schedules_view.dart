@@ -12,23 +12,39 @@ import '../widgets/loading_overlay.dart';
 import 'new_schedule.dart';
 
 class ScheduleView extends StackedView<ScheduleViewModel> {
-  const ScheduleView({super.key});
+  ScheduleView({super.key});
+  final scrolClr = ScrollController();
+  double currentPos = 0.0;
 
   @override
   void onViewModelReady(ScheduleViewModel viewModel) {
     // TODO: implement onViewModelReady
     super.onViewModelReady(viewModel);
+    print('listner registered');
+    scrolClr.addListener(() {
+      currentPos = scrolClr.offset;
+    });
+  }
+
+  @override
+  bool get createNewViewModelOnInsert => false;
+
+  @override
+  void onDispose(ScheduleViewModel viewModel) {
+    // TODO: implement onDispose
+    super.onDispose(viewModel);
+    scrolClr.dispose();
   }
 
   @override
   Widget builder(
       BuildContext context, ScheduleViewModel viewModel, Widget? child) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (viewModel.scrolClr.hasClients) {
-        Future.delayed(Duration.zero)
-            .then((value) => viewModel.scrolClr.jumpTo(viewModel.currentPos));
-      }
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   if (scrolClr.hasClients) {
+    //     Future.delayed(Duration.zero)
+    //         .then((value) => scrolClr.jumpTo(currentPos));
+    //   }
+    // });
 
     return Scaffold(
         backgroundColor: Colors.blue.shade50,
@@ -41,7 +57,6 @@ class ScheduleView extends StackedView<ScheduleViewModel> {
                   : Builder(builder: (context) {
                       if (viewModel.data != null &&
                           viewModel.data!.isNotEmpty) {
-                        print(viewModel.data!.length);
                         return SingleChildScrollView(
                           child: Column(
                             children: [
@@ -73,7 +88,7 @@ class ScheduleView extends StackedView<ScheduleViewModel> {
                                 height: MediaQuery.of(context).size.height /
                                     2.5, // Set a fixed height or use some constraints based on your requirement
                                 child: ListView(
-                                  controller: viewModel.scrolClr,
+                                  controller: scrolClr,
                                   scrollDirection: Axis.horizontal,
                                   children: _buildDateColumns(
                                       viewModel.data, context, viewModel),
@@ -83,8 +98,8 @@ class ScheduleView extends StackedView<ScheduleViewModel> {
                                 children: [
                                   IconButton(
                                     onPressed: () {
-                                      viewModel.scrolClr.animateTo(
-                                        viewModel.currentPos - 100,
+                                      scrolClr.animateTo(
+                                        currentPos - 100,
                                         duration:
                                             const Duration(milliseconds: 500),
                                         curve: Curves.decelerate,
@@ -94,8 +109,8 @@ class ScheduleView extends StackedView<ScheduleViewModel> {
                                   ),
                                   IconButton(
                                     onPressed: () {
-                                      viewModel.scrolClr.animateTo(
-                                        viewModel.currentPos + 100,
+                                      scrolClr.animateTo(
+                                        currentPos + 100,
                                         duration:
                                             const Duration(milliseconds: 500),
                                         curve: Curves.decelerate,

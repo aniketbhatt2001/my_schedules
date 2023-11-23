@@ -46,8 +46,11 @@ class StackedRouter extends _i1.RouterBase {
 
   final _pagesMap = <Type, _i1.StackedRouteFactory>{
     _i2.ScheduleView: (data) {
+      final args = data.getArgs<ScheduleViewArguments>(
+        orElse: () => const ScheduleViewArguments(),
+      );
       return _i5.MaterialPageRoute<dynamic>(
-        builder: (context) => const _i2.ScheduleView(),
+        builder: (context) => _i2.ScheduleView(key: args.key),
         settings: data,
       );
     },
@@ -79,6 +82,28 @@ class StackedRouter extends _i1.RouterBase {
 
   @override
   Map<Type, _i1.StackedRouteFactory> get pagesMap => _pagesMap;
+}
+
+class ScheduleViewArguments {
+  const ScheduleViewArguments({this.key});
+
+  final _i5.Key? key;
+
+  @override
+  String toString() {
+    return '{"key": "$key"}';
+  }
+
+  @override
+  bool operator ==(covariant ScheduleViewArguments other) {
+    if (identical(this, other)) return true;
+    return other.key == key;
+  }
+
+  @override
+  int get hashCode {
+    return key.hashCode;
+  }
 }
 
 class EditNewScheduleFormArguments {
@@ -141,14 +166,16 @@ class EditNewScheduleFormArguments {
 }
 
 extension NavigatorStateExtension on _i7.NavigationService {
-  Future<dynamic> navigateToScheduleView([
+  Future<dynamic> navigateToScheduleView({
+    _i5.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  ]) async {
+  }) async {
     return navigateTo<dynamic>(Routes.scheduleView,
+        arguments: ScheduleViewArguments(key: key),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -200,14 +227,16 @@ extension NavigatorStateExtension on _i7.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> replaceWithScheduleView([
+  Future<dynamic> replaceWithScheduleView({
+    _i5.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  ]) async {
+  }) async {
     return replaceWith<dynamic>(Routes.scheduleView,
+        arguments: ScheduleViewArguments(key: key),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

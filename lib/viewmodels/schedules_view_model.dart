@@ -9,8 +9,6 @@ import 'package:stacked_services/stacked_services.dart';
 
 class ScheduleViewModel extends FutureViewModel<List<ScheduleModel>?> {
   final sncakbarService = locator<SnackbarService>();
-  final scrolClr = ScrollController();
-  double currentPos = 0.0;
 
   Future<void> deleteSchedule(String id, context) async {
     LoadingOverlay.show(context);
@@ -91,13 +89,6 @@ class ScheduleViewModel extends FutureViewModel<List<ScheduleModel>?> {
   void onData(data) {
     // TODO: implement onData
     super.onData(data);
-
-    if (!scrolClr.hasListeners) {
-      print('listner registred');
-      scrolClr.addListener(() {
-        currentPos = scrolClr.offset;
-      });
-    }
   }
 
   @override
@@ -125,7 +116,7 @@ class ScheduleViewModel extends FutureViewModel<List<ScheduleModel>?> {
   @override
   void dispose() {
     // Dispose of the ScrollController
-    scrolClr.dispose();
+
     super.dispose();
   }
 }
